@@ -1,0 +1,885 @@
+<!doctype html>
+
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>متتبع الإيراد اليومي - سوريا</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <!-- ✅ Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
+    *{margin:0;padding:0;box-sizing:border-box}
+    html,body{height:100%;width:100%}
+    body{font-family:'Cairo',sans-serif;overflow:hidden;color:#1a1a1a}
+    body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#1a1a6e,#4a2c8a,#7b2d8b,#3a7bd5,#00d2ff);background-size:400% 400%;animation:gradientShift 15s ease infinite;z-index:-2}
+    @keyframes gradientShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+```
+body.bg-theme-1::before{background:linear-gradient(135deg,#0d0221,#190a4a,#2d1b6b,#1a0a5c,#0a1a4a,#050d2e)!important;background-size:400% 400%!important;animation:gradientShift 18s ease infinite!important}
+body.bg-theme-1::after{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background-image:radial-gradient(1.5px 1.5px at 15px 25px,rgba(200,180,255,.9),transparent),radial-gradient(1px 1px at 55px 65px,rgba(255,255,255,.8),transparent),radial-gradient(2px 2px at 120px 45px,rgba(180,200,255,.9),transparent),radial-gradient(1px 1px at 200px 85px,rgba(200,180,255,.8),transparent),radial-gradient(2px 2px at 350px 60px,rgba(180,220,255,.8),transparent);background-repeat:repeat;background-size:380px 280px;animation:twinkleStar 6s ease-in-out infinite;opacity:.7;z-index:-1}
+body.bg-theme-2::before{background:linear-gradient(135deg,#4a0030,#8b0057,#c2185b,#e91e8c,#ff5722,#ff9800)!important;background-size:400% 400%!important;animation:gradientShift 14s ease infinite!important}
+body.bg-theme-3::before{background:linear-gradient(135deg,#003320,#00695c,#00897b,#00acc1,#0288d1,#1565c0)!important;background-size:400% 400%!important;animation:gradientShift 14s ease infinite!important}
+body.bg-theme-4::before{background:linear-gradient(135deg,#4a1500,#bf360c,#e64a19,#ff6f00,#f9a825,#ffd740)!important;background-size:400% 400%!important;animation:gradientShift 14s ease infinite!important}
+body.bg-theme-5::before{background:linear-gradient(135deg,#0a0015,#1a0035,#2d0055,#1a0040,#080010)!important;background-size:400% 400%!important;animation:gradientShift 16s ease infinite!important}
+body.bg-theme-5::after{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background-image:radial-gradient(1px 1px at 30px 40px,rgba(180,100,255,.9),transparent),radial-gradient(1.5px 1.5px at 90px 20px,rgba(255,255,255,.8),transparent),radial-gradient(2px 2px at 240px 50px,rgba(255,255,255,.6),transparent);background-repeat:repeat;background-size:350px 200px;animation:twinkleStar 7s ease-in-out infinite alternate;opacity:.8;z-index:-1}
+body.bg-theme-6::before{background:radial-gradient(ellipse at center,#1a0040,#0d0020,#050010)!important;animation:gradientShift 20s ease infinite!important}
+body.bg-theme-7::before{background:linear-gradient(160deg,#001529,#003366,#005580,#007b8a,#004466)!important;background-size:400% 400%!important;animation:gradientShift 16s ease infinite!important}
+body.bg-theme-dragon::before{background:linear-gradient(-45deg,#1a0000,#8b0000,#cc2200,#ff4500,#ff6b00,#cc2200,#8b0000,#1a0000)!important;background-size:600% 600%!important;animation:dragonFire 3s ease-in-out infinite!important}
+body.bg-theme-dragon::after{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(ellipse at 50% 100%,rgba(255,100,0,.3),transparent 60%);z-index:-1;animation:fireGlow 2s ease-in-out infinite alternate}
+@keyframes fireGlow{from{opacity:.7}to{opacity:1}}
+body.bg-theme-starry-night::before{background:linear-gradient(160deg,#010b19,#051a35,#0a2550,#061530,#020a18)!important;background-size:400% 400%!important;animation:gradientShift 22s ease infinite!important}
+body.bg-theme-starry-night::after{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background-image:radial-gradient(2px 2px at 25px 15px,white,transparent),radial-gradient(1px 1px at 70px 55px,rgba(255,255,255,.9),transparent),radial-gradient(2px 2px at 140px 30px,rgba(200,230,255,.9),transparent),radial-gradient(1.5px 1.5px at 200px 20px,rgba(255,255,255,.8),transparent),radial-gradient(1px 1px at 310px 45px,rgba(255,255,255,.9),transparent);background-repeat:repeat;background-size:360px 160px;animation:twinkleStar 4s ease-in-out infinite;opacity:.9;z-index:-1}
+body.bg-theme-emerald::before{background:linear-gradient(135deg,#001a0d,#004d29,#00793f,#009e55,#00c26b)!important;background-size:400% 400%!important;animation:gradientShift 17s ease infinite!important}
+body.bg-theme-dual-blue::before{background:linear-gradient(135deg,#000428,#001f6e,#0043b0,#0066cc,#00a8ff)!important;background-size:400% 400%!important;animation:gradientShift 15s ease infinite!important}
+body.bg-theme-purple-pink::before{background:linear-gradient(135deg,#1a0030,#4a0080,#7b00cc,#aa00ff,#cc0077,#ff0055)!important;background-size:400% 400%!important;animation:gradientShift 14s ease infinite!important}
+@keyframes twinkleStar{0%,100%{opacity:.55}50%{opacity:1}}
+@keyframes dragonFire{0%{background-position:0% 50%}50%{background-position:50% 0%}100%{background-position:0% 50%}}
+
+body.dark-mode{filter:brightness(.82) contrast(1.12)}
+.container{display:flex;height:100%;width:100%}
+.sidebar{width:280px;background:rgba(255,255,255,.1);backdrop-filter:blur(12px);border-right:1px solid rgba(255,255,255,.2);color:white;padding:25px;overflow-y:auto;box-shadow:inset -2px 0 8px rgba(0,0,0,.15)}
+.sidebar::-webkit-scrollbar{width:6px}.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.3);border-radius:3px}
+.main-content{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.top-bar{background:rgba(255,255,255,.08);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.2);color:white;padding:15px 30px;display:flex;justify-content:space-between;align-items:center}
+.content-area{flex:1;overflow-y:auto;padding:30px;background:rgba(255,255,255,.04)}
+.content-area::-webkit-scrollbar{width:8px}.content-area::-webkit-scrollbar-thumb{background:rgba(255,255,255,.3);border-radius:4px}
+.sidebar h2{font-size:22px;margin-bottom:30px;color:#fff;border-bottom:2px solid rgba(255,255,255,.3);padding-bottom:15px;font-weight:700}
+.sidebar ul{list-style:none}.sidebar li{margin:10px 0}
+.sidebar button{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:white;cursor:pointer;font-size:14px;width:100%;text-align:right;padding:12px 15px;border-radius:8px;transition:all .3s;font-family:'Cairo',sans-serif}
+.sidebar button:hover{background:rgba(255,255,255,.22);transform:translateX(-5px)}
+.sidebar button.active{background:rgba(102,126,234,.45);border-color:rgba(102,126,234,.85);font-weight:700}
+.section{display:none}.section.active{display:block;animation:fadeIn .5s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.card{background:rgba(255,255,255,.14);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.28);border-radius:15px;padding:25px;margin-bottom:20px;box-shadow:0 8px 32px rgba(0,0,0,.12);color:white}
+.card h3{color:#fff;margin-bottom:20px;font-size:20px;font-weight:700}
+.form-group{margin-bottom:15px}.form-group label{display:block;margin-bottom:8px;color:white;font-weight:600;font-size:14px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px;border:1px solid rgba(255,255,255,.3);border-radius:8px;font-family:'Cairo',sans-serif;background:rgba(255,255,255,.1);color:white;font-size:14px}
+.form-group input::placeholder,.form-group textarea::placeholder{color:rgba(255,255,255,.6)}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:rgba(255,255,255,.6);background:rgba(255,255,255,.2)}
+.form-group select option{background:#1a1a4a;color:white}
+.btn{padding:12px 24px;border:none;border-radius:8px;cursor:pointer;font-family:'Cairo',sans-serif;font-size:14px;font-weight:600;transition:all .3s}
+.btn-primary{background:rgba(102,126,234,.6);color:white;border:1px solid rgba(102,126,234,.85)}.btn-primary:hover{background:rgba(102,126,234,.85);transform:translateY(-2px)}
+.btn-success{background:rgba(72,187,120,.6);color:white;border:1px solid rgba(72,187,120,.85)}.btn-success:hover{background:rgba(72,187,120,.85);transform:translateY(-2px)}
+.btn-danger{background:rgba(245,101,101,.6);color:white;border:1px solid rgba(245,101,101,.85)}.btn-danger:hover{background:rgba(245,101,101,.85);transform:translateY(-2px)}
+.btn-secondary{background:rgba(113,128,150,.6);color:white;border:1px solid rgba(113,128,150,.85)}.btn-secondary:hover{background:rgba(113,128,150,.85);transform:translateY(-2px)}
+.summary-box{background:rgba(102,126,234,.3);border:1px solid rgba(102,126,234,.6);color:white;padding:25px;border-radius:15px;margin-bottom:20px}
+.chart-container{position:relative;height:350px;margin-bottom:20px}
+.overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.82);display:flex;justify-content:center;align-items:center;z-index:9999;backdrop-filter:blur(6px)}
+.overlay.hidden-important{display:none!important}
+.overlay-content{background:rgba(255,255,255,.15);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.3);padding:40px;border-radius:15px;text-align:center;color:white;max-width:500px}
+.overlay-content h2{margin-bottom:20px;font-size:24px}.overlay-content p{margin-bottom:20px;opacity:.9}
+.hidden-important{display:none!important}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.stats-row{display:grid;grid-template-columns:repeat(6,1fr);gap:15px;margin-bottom:20px}
+.stat-card{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);padding:20px;border-radius:12px;text-align:center;color:white}
+.stat-card .label{color:rgba(255,255,255,.75);font-size:12px;margin-bottom:10px;font-weight:600}.stat-card .value{font-size:20px;font-weight:700}
+.msg-container{position:fixed;top:20px;right:20px;z-index:10000}
+.success-msg{background:rgba(72,187,120,.32);border:1px solid rgba(72,187,120,.65);color:#a8e6a1;padding:15px 20px;border-radius:8px;font-size:13px;margin-bottom:8px}
+.error-msg{background:rgba(245,101,101,.32);border:1px solid rgba(245,101,101,.65);color:#ff9999;padding:15px 20px;border-radius:8px;font-size:13px;margin-bottom:8px}
+.table-responsive{overflow-x:auto}
+.data-table{width:100%;border-collapse:collapse;margin-top:15px}
+.data-table th{background:rgba(255,255,255,.12);padding:12px;text-align:right;color:white;font-weight:700;border-bottom:2px solid rgba(255,255,255,.22)}
+.data-table td{padding:12px;border-bottom:1px solid rgba(255,255,255,.1);color:white}
+.data-table tr:hover{background:rgba(255,255,255,.08)}
+.btn-group{display:flex;gap:8px;align-items:center}.btn-small{padding:6px 12px;font-size:12px}
+.trash-container{background:rgba(245,101,101,.15);border:1px solid rgba(245,101,101,.32);border-radius:12px;padding:20px;margin-top:20px}
+.trash-item{background:rgba(255,255,255,.1);padding:12px;margin-bottom:10px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;color:white}
+.theme-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px}
+
+/* ✅ Supabase status */
+#sbStatus{font-size:11px;padding:4px 12px;border-radius:20px;font-weight:700;display:inline-block;margin-top:20px}
+#sbStatus.connected{background:rgba(72,187,120,.25);border:1px solid rgba(72,187,120,.6);color:#a8e6a1}
+#sbStatus.disconnected{background:rgba(245,101,101,.25);border:1px solid rgba(245,101,101,.6);color:#ff9999}
+#sbStatus.connecting{background:rgba(240,180,50,.25);border:1px solid rgba(240,180,50,.6);color:#ffd580}
+
+/* SQL helper box */
+.sql-box{background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:14px;margin:10px 0;font-family:monospace;font-size:11px;color:#a8e6a1;direction:ltr;white-space:pre-wrap;line-height:1.7}
+
+#pdfRenderArea{position:fixed;left:-9999px;top:0;width:210mm;background:white;color:#111;direction:rtl;z-index:-999}
+```
+
+  </style>
+</head>
+<body class="bg-theme-1">
+  <div id="pdfRenderArea"></div>
+  <div id="pdfOverlay" class="overlay hidden-important">
+    <div class="overlay-content">
+      <h2>⏳ جاري إنشاء PDF...</h2>
+      <p id="pdfOverlayMsg">يرجى الانتظار قليلاً</p>
+    </div>
+  </div>
+  <div class="hidden-important" id="msgContainer"></div>
+
+  <div class="container">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <h2>📊 متتبع الإيراد</h2>
+      <ul>
+        <li><button class="active" onclick="App.showSection('dashboardSection',event)">📈 لوحة التحكم</button></li>
+        <li><button onclick="App.showSection('addIncomeSection',event)">➕ إضافة إيراد</button></li>
+        <li><button onclick="App.showSection('historySection',event)">📋 السجل</button></li>
+        <li><button onclick="App.showSection('reportSection',event)">📊 التقارير</button></li>
+        <li><button onclick="App.showSection('trashSection',event)">🗑️ سلة المحذوفات</button></li>
+        <li><button onclick="App.showSection('settingsSection',event)">⚙️ الإعدادات</button></li>
+      </ul>
+      <div style="text-align:center">
+        <span id="sbStatus" class="disconnected">🔴 Supabase غير متصل</span>
+      </div>
+    </div>
+
+```
+<!-- MAIN -->
+<div class="main-content">
+  <div class="top-bar">
+    <div>
+      <span style="font-size:16px;font-weight:bold">متتبع الإيراد اليومي - سوريا 🇸🇾</span><br>
+      <span style="font-size:12px;opacity:.8">سعر الصرف: <span id="exchangeRateDisplay">1 USD = 0 SYP</span></span>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-primary" onclick="App.exportPDF()">📥 تصدير PDF</button>
+      <button class="btn btn-secondary" onclick="App.exportExcel()">📊 تصدير Excel</button>
+    </div>
+  </div>
+
+  <div class="content-area">
+
+    <!-- DASHBOARD -->
+    <div id="dashboardSection" class="section active">
+      <h2 style="color:white;margin-bottom:20px;font-size:28px">📈 لوحة التحكم</h2>
+      <div style="margin-bottom:20px;display:flex;gap:15px;flex-wrap:wrap">
+        <div><label style="color:white;font-weight:600;margin-left:8px">فلتر المدينة:</label>
+          <select id="dashboardCityFilter" onchange="App.renderDashboard()" style="padding:10px;border:1px solid rgba(255,255,255,.3);border-radius:8px;background:rgba(255,255,255,.1);color:white;font-family:'Cairo',sans-serif">
+            <option value="">كل المدن</option><option>القامشلي</option><option>الحسكة</option><option>الرقة</option><option>الطبقة</option><option>كوباني</option><option>منبج</option>
+          </select></div>
+        <div><label style="color:white;font-weight:600;margin-left:8px">من:</label>
+          <input type="date" id="dashboardDateFrom" onchange="App.renderDashboard()" style="padding:10px;border:1px solid rgba(255,255,255,.3);border-radius:8px;background:rgba(255,255,255,.1);color:white"></div>
+        <div><label style="color:white;font-weight:600;margin-left:8px">إلى:</label>
+          <input type="date" id="dashboardDateTo" onchange="App.renderDashboard()" style="padding:10px;border:1px solid rgba(255,255,255,.3);border-radius:8px;background:rgba(255,255,255,.1);color:white"></div>
+      </div>
+      <div class="stats-row" id="statsRow"></div>
+      <div class="grid-2">
+        <div class="card"><h3>📊 الإجمالي حسب العملة</h3><div id="dashboardStats"></div></div>
+        <div class="card"><h3>📍 توزيع حسب المدينة</h3><div class="chart-container"><canvas id="citiesChart"></canvas></div></div>
+      </div>
+      <div class="card"><h3>📈 الإيراد اليومي</h3><div class="chart-container"><canvas id="dailyChart"></canvas></div></div>
+    </div>
+
+    <!-- ADD INCOME -->
+    <div id="addIncomeSection" class="section">
+      <div class="card"><h3>➕ إضافة إيراد جديد</h3>
+        <form id="incomeForm" onsubmit="App.addIncome(event)">
+          <div class="form-group"><label>المدينة</label>
+            <select id="incomeCity" required>
+              <option value="">اختر المدينة</option><option>القامشلي</option><option>الحسكة</option><option>الرقة</option><option>الطبقة</option><option>كوباني</option><option>منبج</option>
+            </select></div>
+          <div class="form-group"><label>نوع العملة</label>
+            <select id="incomeCurrency" onchange="App.calcEquiv()" required>
+              <option value="SYP">الليرة السورية (SYP)</option><option value="USD">الدولار الأمريكي (USD)</option>
+            </select></div>
+          <div class="form-group"><label>المبلغ</label><input type="number" id="incomeAmount" placeholder="0.00" step="0.01" required oninput="App.calcEquiv()"></div>
+          <div class="form-group"><label>المكافئ بالعملة الأخرى</label><input type="number" id="incomeEquivalent" readonly></div>
+          <div class="form-group"><label>سعر الصرف المستخدم</label><input type="number" id="incomeExchangeRate" readonly></div>
+          <div class="form-group"><label>الوصف</label><textarea id="incomeDescription" rows="3" placeholder="وصف الإيراد"></textarea></div>
+          <div class="form-group"><label>التاريخ</label><input type="date" id="incomeDate" required></div>
+          <button type="submit" class="btn btn-success" style="width:100%">✅ إضافة الإيراد</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- HISTORY -->
+    <div id="historySection" class="section">
+      <div class="card"><h3>📋 سجل الإيرادات</h3>
+        <div style="margin-bottom:15px"><label style="color:white;margin-left:8px">فلتر المدينة:</label>
+          <select id="cityFilter" onchange="App.renderHistory()" style="padding:10px;border:1px solid rgba(255,255,255,.3);border-radius:8px;background:rgba(255,255,255,.1);color:white">
+            <option value="">كل المدن</option><option>القامشلي</option><option>الحسكة</option><option>الرقة</option><option>الطبقة</option><option>كوباني</option><option>منبج</option>
+          </select></div>
+        <div class="table-responsive">
+          <table class="data-table"><thead><tr><th>المدينة</th><th>SYP</th><th>USD</th><th>سعر الصرف</th><th>التاريخ</th><th>الوصف</th><th>الإجراءات</th></tr></thead>
+            <tbody id="historyTable"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- REPORTS -->
+    <div id="reportSection" class="section">
+      <div class="card"><h3>📊 التقارير</h3>
+        <div style="margin-bottom:20px;display:flex;gap:15px;flex-wrap:wrap">
+          <div><label style="color:white;font-weight:600;margin-left:8px">فلتر المدينة:</label>
+            <select id="reportCityFilter" onchange="App.generateReport()" style="padding:10px;border:1px solid rgba(255,255,255,.3);border-radius:8px;background:rgba(255,255,255,.1);color:white;font-family:'Cairo',sans-serif">
+              <option value="">كل المدن</option><option>القامشلي</option><option>الحسكة</option><option>الرقة</option><option>الطبقة</option><option>كوباني</option><option>منبج</option>
+            </select></div>
+          <div><label style="color:white;font-weight:600;margin-left:8px">من:</label>
+            <input type="date" id="reportDateFrom" onchange="App.generateReport()" style="padding:10px;border:1px solid rgba(255,255,255,.3);border-radius:8px;background:rgba(255,255,255,.1);color:white"></div>
+          <div><label style="color:white;font-weight:600;margin-left:8px">إلى:</label>
+            <input type="date" id="reportDateTo" onchange="App.generateReport()" style="padding:10px;border:1px solid rgba(255,255,255,.3);border-radius:8px;background:rgba(255,255,255,.1);color:white"></div>
+          <div style="display:flex;gap:8px;align-items:flex-end">
+            <button class="btn btn-primary" onclick="App.exportPDFWithFilters()">💾 PDF</button>
+            <button class="btn btn-secondary" onclick="App.exportExcelWithFilters()">📥 Excel</button>
+          </div>
+        </div>
+        <div id="reportContent"></div>
+      </div>
+    </div>
+
+    <!-- TRASH -->
+    <div id="trashSection" class="section">
+      <div class="card"><h3>🗑️ سلة المحذوفات</h3><div id="trashList"></div></div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div id="settingsSection" class="section">
+
+      <!-- ✅ SUPABASE CONFIG -->
+      <div class="card">
+        <h3>⚡ إعدادات Supabase (المزامنة التلقائية)</h3>
+
+        <div style="background:rgba(0,200,150,.12);border:1px solid rgba(0,200,150,.4);border-radius:10px;padding:16px;margin-bottom:18px">
+          <p style="font-weight:700;color:#6fffcc;margin-bottom:10px">📋 خطوات الإعداد (مرة وحدة فقط):</p>
+          <ol style="font-size:12px;line-height:2.1;padding-right:18px;color:rgba(255,255,255,.85)">
+            <li>روح على <strong>supabase.com</strong> → سجّل مجاناً</li>
+            <li>أنشئ مشروع جديد → احفظ الـ Password</li>
+            <li>من <strong>Project Settings → API</strong> انسخ:<br>
+              &nbsp;&nbsp;• <strong>Project URL</strong><br>
+              &nbsp;&nbsp;• <strong>anon public</strong> key</li>
+            <li>من <strong>SQL Editor</strong> في Supabase نفّذ الكود هذا:</li>
+          </ol>
+          <div class="sql-box">-- أنشئ جدول الإيرادات
+```
+
+CREATE TABLE incomes (
+id           TEXT PRIMARY KEY,
+city         TEXT,
+amount_syp   FLOAT8,
+amount_usd   FLOAT8,
+description  TEXT,
+date         TEXT,
+exchange_rate FLOAT8,
+created_at   TEXT
+);
+
+– أنشئ جدول سلة المحذوفات
+CREATE TABLE trash (
+id           TEXT PRIMARY KEY,
+city         TEXT,
+amount_syp   FLOAT8,
+amount_usd   FLOAT8,
+description  TEXT,
+date         TEXT,
+exchange_rate FLOAT8,
+created_at   TEXT,
+deleted_at   TEXT
+);
+
+– فعّل الـ Real-time على الجدولين
+ALTER TABLE incomes REPLICA IDENTITY FULL;
+ALTER TABLE trash   REPLICA IDENTITY FULL;</div>
+<p style="font-size:11px;color:rgba(255,255,255,.6);margin-top:8px">* من <strong>Database → Replication</strong> تأكد إن incomes و trash مفعّلين</p>
+</div>
+
+```
+        <div class="form-group"><label>🌐 Project URL</label>
+          <input type="text" id="sbUrl" placeholder="https://xxxxxxxxxxxx.supabase.co" style="direction:ltr"></div>
+        <div class="form-group"><label>🔑 Anon Key</label>
+          <input type="text" id="sbKey" placeholder="eyJhbGciOi..." style="direction:ltr"></div>
+        <div style="display:flex;gap:10px;margin-top:12px">
+          <button class="btn btn-success" onclick="App.saveSupabaseConfig()">⚡ حفظ وتفعيل Supabase</button>
+          <button class="btn btn-danger" onclick="App.clearSupabaseConfig()">🗑️ إلغاء الاتصال</button>
+        </div>
+        <p style="font-size:11px;opacity:.55;margin-top:10px">* تُحفظ الإعدادات في المتصفح فقط — لا تشاركها مع أحد.</p>
+      </div>
+
+      <!-- GENERAL SETTINGS -->
+      <div class="card">
+        <h3>⚙️ الإعدادات العامة</h3>
+        <div class="form-group"><label>سعر الصرف (1 دولار = كم ليرة)</label>
+          <input type="number" id="exchangeRate" placeholder="1500" step="0.01" onchange="App.updateExchangeRate()"></div>
+        <div class="form-group"><label>🎨 مظهر الخلفية</label>
+          <div class="theme-grid">
+            <button class="btn" onclick="App.setTheme('bg-theme-1')" style="background:linear-gradient(135deg,#1a1a6e,#4a2c8a,#3a7bd5);color:white;border:none">🌌 كوني داكن</button>
+            <button class="btn" onclick="App.setTheme('bg-theme-2')" style="background:linear-gradient(135deg,#8b0057,#e91e8c,#ff5722);color:white;border:none">🌹 ورود ملتهبة</button>
+            <button class="btn" onclick="App.setTheme('bg-theme-3')" style="background:linear-gradient(135deg,#004d29,#00897b,#0288d1);color:white;border:none">🌊 محيط استوائي</button>
+            <button class="btn" onclick="App.setTheme('bg-theme-4')" style="background:linear-gradient(135deg,#bf360c,#ff6f00,#ffd740);color:white;border:none">🌅 غروب ذهبي</button>
+          </div>
+          <div class="theme-grid" style="margin-top:8px">
+            <button class="btn" onclick="App.setTheme('bg-theme-5')" style="background:linear-gradient(135deg,#0a0015,#2d0055);color:white;border:none">🌙 ليل بنفسجي</button>
+            <button class="btn" onclick="App.setTheme('bg-theme-7')" style="background:linear-gradient(135deg,#001529,#005580);color:white;border:none">🔷 عمق المحيط</button>
+            <button class="btn" onclick="App.setTheme('bg-theme-starry-night')" style="background:linear-gradient(135deg,#010b19,#0a2550);color:#a8d8ff;border:none">⭐ سماء النجوم</button>
+            <button class="btn" onclick="App.setTheme('bg-theme-dragon')" style="background:linear-gradient(135deg,#8b0000,#ff6b00);color:white;border:none">🐉 نار التنين</button>
+          </div>
+          <div class="theme-grid" style="margin-top:8px">
+            <button class="btn" onclick="App.setTheme('bg-theme-emerald')" style="background:linear-gradient(135deg,#001a0d,#00793f);color:white;border:none">💎 زمرد ملكي</button>
+            <button class="btn" onclick="App.setTheme('bg-theme-dual-blue')" style="background:linear-gradient(135deg,#000428,#00a8ff);color:white;border:none">⚡ أزرق كهربائي</button>
+            <button class="btn" onclick="App.setTheme('bg-theme-purple-pink')" style="background:linear-gradient(135deg,#1a0030,#ff0055);color:white;border:none">💜 نيون بنفسجي</button>
+            <button class="btn" onclick="App.setTheme('bg-theme-6')" style="background:radial-gradient(ellipse,#1a0040,#050010);color:white;border:none">🕳️ الفراغ الكوني</button>
+          </div>
+        </div>
+        <div class="form-group"><label><input type="checkbox" id="darkMode"> الوضع الليلي الداكن</label></div>
+        <button class="btn btn-primary" onclick="App.saveSettings()" style="margin-top:12px">💾 حفظ الإعدادات</button>
+        <button class="btn btn-danger" onclick="App.clearAllData()" style="margin-top:8px;margin-right:8px">🗑️ حذف كل البيانات</button>
+      </div>
+
+    </div><!-- end settingsSection -->
+  </div><!-- end content-area -->
+</div><!-- end main-content -->
+```
+
+  </div><!-- end container -->
+
+  <script>
+  // ─────────────────────────────────────────────────────────
+  //  CONSTANTS
+  // ─────────────────────────────────────────────────────────
+  var CITIES = ['القامشلي','الحسكة','الرقة','الطبقة','كوباني','منبج'];
+  var DEFAULT_RATE = 1500;
+
+  // ─────────────────────────────────────────────────────────
+  //  SUPABASE STATE
+  // ─────────────────────────────────────────────────────────
+  var SB = null;           // supabase client
+  var sbReady = false;
+  var sbChannels = [];     // real-time channels
+
+  // ─────────────────────────────────────────────────────────
+  //  HELPERS
+  // ─────────────────────────────────────────────────────────
+  function fmt(n){ return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,','); }
+  function $(id){ return document.getElementById(id); }
+  function show(el){ if(el) el.classList.remove('hidden-important'); }
+  function hide(el){ if(el) el.classList.add('hidden-important'); }
+  function today(){
+    var t=new Date();
+    return t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0');
+  }
+  function setSBStatus(state,txt){
+    var el=$('sbStatus'); if(!el) return;
+    el.className=state; el.textContent=txt;
+  }
+
+  // ─────────────────────────────────────────────────────────
+  //  APP
+  // ─────────────────────────────────────────────────────────
+  var App = {
+    data: [],
+    trash: [],
+    rate: DEFAULT_RATE,
+    charts: {},
+    editId: null,
+
+    // ── INIT ─────────────────────────────────────────────
+    init: function(){
+      this.loadLocal();
+      $('incomeDate').value = today();
+      $('exchangeRate').value = this.rate;
+      $('incomeExchangeRate').value = this.rate;
+      this.updateRateDisplay();
+      this.loadTheme();
+      this.fillSBFields();
+      this.renderDashboard();
+      this.initSupabase();
+    },
+
+    // ── SUPABASE INIT ────────────────────────────────────
+    initSupabase: function(){
+      var self = this;
+      var cfg = this.loadSBConfig();
+      if(!cfg){ setSBStatus('disconnected','🔴 Supabase غير مُعدَّل'); return; }
+      setSBStatus('connecting','🟡 جاري الاتصال...');
+      try {
+        // Remove old channels
+        sbChannels.forEach(function(ch){ try{ ch.unsubscribe(); }catch(e){} });
+        sbChannels = [];
+
+        SB = supabase.createClient(cfg.url, cfg.key);
+        sbReady = true;
+
+        // ── First load ──
+        self.fetchAll().then(function(){
+          self.renderDashboard();
+          setSBStatus('connected','🟢 Supabase متصل ✓');
+          self.showMsg('⚡ Supabase متصل — مزامنة فورية مفعّلة');
+
+          // ── Real-time: incomes ──
+          var chInc = SB.channel('rt-incomes')
+            .on('postgres_changes',
+              { event:'*', schema:'public', table:'incomes' },
+              function(payload){
+                if(payload.eventType === 'INSERT'){
+                  // avoid duplicate
+                  var exists = self.data.find(function(d){ return d.id === payload.new.id; });
+                  if(!exists) self.data.push(self.mapRow(payload.new));
+                } else if(payload.eventType === 'UPDATE'){
+                  var idx = self.data.findIndex(function(d){ return d.id === payload.new.id; });
+                  if(idx>=0) self.data[idx] = self.mapRow(payload.new);
+                } else if(payload.eventType === 'DELETE'){
+                  self.data = self.data.filter(function(d){ return d.id !== payload.old.id; });
+                }
+                self.renderDashboard();
+              })
+            .subscribe();
+
+          // ── Real-time: trash ──
+          var chTrsh = SB.channel('rt-trash')
+            .on('postgres_changes',
+              { event:'*', schema:'public', table:'trash' },
+              function(payload){
+                if(payload.eventType === 'INSERT'){
+                  var exists = self.trash.find(function(d){ return d.id === payload.new.id; });
+                  if(!exists) self.trash.push(self.mapTrashRow(payload.new));
+                } else if(payload.eventType === 'DELETE'){
+                  self.trash = self.trash.filter(function(d){ return d.id !== payload.old.id; });
+                }
+                self.renderTrash();
+              })
+            .subscribe();
+
+          sbChannels.push(chInc, chTrsh);
+        });
+
+      } catch(e){
+        console.error(e);
+        setSBStatus('disconnected','🔴 خطأ: '+e.message);
+        this.showMsg('❌ خطأ في Supabase: '+e.message,'error');
+      }
+    },
+
+    // ── MAP Supabase row → app object ────────────────────
+    mapRow: function(r){
+      return {
+        id: r.id, city: r.city,
+        amountSYP: r.amount_syp, amountUSD: r.amount_usd,
+        description: r.description || '', date: r.date,
+        exchangeRate: r.exchange_rate, createdAt: r.created_at
+      };
+    },
+    mapTrashRow: function(r){
+      return Object.assign(this.mapRow(r), { deletedAt: r.deleted_at });
+    },
+
+    // ── FETCH ALL (on connect) ───────────────────────────
+    fetchAll: async function(){
+      try {
+        var r1 = await SB.from('incomes').select('*').order('date',{ascending:false});
+        if(r1.data) this.data = r1.data.map(this.mapRow.bind(this));
+        var r2 = await SB.from('trash').select('*');
+        if(r2.data) this.trash = r2.data.map(this.mapTrashRow.bind(this));
+        this.saveLocal();
+      } catch(e){ console.error('fetchAll error',e); }
+    },
+
+    // ── SUPABASE CONFIG ──────────────────────────────────
+    loadSBConfig: function(){
+      var s = localStorage.getItem('sbConfig');
+      return s ? JSON.parse(s) : null;
+    },
+    fillSBFields: function(){
+      var cfg = this.loadSBConfig();
+      if(!cfg) return;
+      $('sbUrl').value = cfg.url||''; $('sbKey').value = cfg.key||'';
+    },
+    saveSupabaseConfig: function(){
+      var url=$('sbUrl').value.trim(), key=$('sbKey').value.trim();
+      if(!url||!key){ this.showMsg('⚠️ أدخل الـ URL والـ Key','error'); return; }
+      localStorage.setItem('sbConfig', JSON.stringify({url:url,key:key}));
+      this.showMsg('✅ تم حفظ إعدادات Supabase');
+      this.initSupabase();
+    },
+    clearSupabaseConfig: function(){
+      if(!confirm('إلغاء اتصال Supabase؟ البيانات ستعمل محلياً فقط.')) return;
+      localStorage.removeItem('sbConfig');
+      sbChannels.forEach(function(ch){ try{ ch.unsubscribe(); }catch(e){} });
+      sbChannels=[]; SB=null; sbReady=false;
+      setSBStatus('disconnected','🔴 Supabase غير مُعدَّل');
+      $('sbUrl').value=''; $('sbKey').value='';
+      this.showMsg('✅ تم إلغاء اتصال Supabase');
+    },
+
+    // ── LOCAL STORAGE ────────────────────────────────────
+    saveLocal: function(){
+      localStorage.setItem('incData', JSON.stringify(this.data));
+      localStorage.setItem('incTrash', JSON.stringify(this.trash));
+      localStorage.setItem('incRate', this.rate.toString());
+    },
+    loadLocal: function(){
+      var d=localStorage.getItem('incData');   this.data  = d ? JSON.parse(d) : [];
+      var t=localStorage.getItem('incTrash');  this.trash = t ? JSON.parse(t) : [];
+      var r=localStorage.getItem('incRate');   this.rate  = r ? parseFloat(r) : DEFAULT_RATE;
+    },
+
+    // ── THEME ────────────────────────────────────────────
+    setTheme: function(t){
+      var dark=document.body.classList.contains('dark-mode');
+      document.body.className=t; if(dark) document.body.classList.add('dark-mode');
+      localStorage.setItem('theme',t); this.showMsg('✅ تم تغيير المظهر');
+    },
+    loadTheme: function(){
+      var t=localStorage.getItem('theme')||'bg-theme-1';
+      document.body.className=t;
+      if(localStorage.getItem('darkMode')==='true'){ document.body.classList.add('dark-mode'); $('darkMode').checked=true; }
+    },
+
+    // ── MESSAGES ─────────────────────────────────────────
+    showMsg: function(text,type){
+      type=type||'success';
+      var c=$('msgContainer'), m=document.createElement('div');
+      m.className=type==='success'?'success-msg':'error-msg';
+      m.textContent=text; c.appendChild(m); show(c);
+      setTimeout(function(){ m.remove(); if(!c.children.length) hide(c); },3500);
+    },
+
+    // ── EXCHANGE RATE ────────────────────────────────────
+    calcEquiv: function(){
+      var a=parseFloat($('incomeAmount').value)||0, cur=$('incomeCurrency').value;
+      $('incomeEquivalent').value=(cur==='SYP'?a/this.rate:a*this.rate).toFixed(2);
+      $('incomeExchangeRate').value=this.rate.toFixed(2);
+    },
+    updateExchangeRate: function(){
+      this.rate=parseFloat($('exchangeRate').value)||DEFAULT_RATE;
+      this.saveLocal(); this.updateRateDisplay();
+      $('incomeExchangeRate').value=this.rate.toFixed(2);
+      this.showMsg('✅ تم تحديث سعر الصرف');
+    },
+    updateRateDisplay: function(){
+      $('exchangeRateDisplay').textContent='1 USD = '+fmt(this.rate.toFixed(0))+' SYP';
+    },
+
+    // ── ADD INCOME ────────────────────────────────────────
+    addIncome: async function(e){
+      e.preventDefault();
+      var city=$('incomeCity').value, cur=$('incomeCurrency').value;
+      var amount=parseFloat($('incomeAmount').value);
+      if(!city||!amount){ this.showMsg('⚠️ ملء الحقول الإجبارية','error'); return; }
+      var aSYP=cur==='SYP'?amount:amount*this.rate;
+      var aUSD=cur==='USD'?amount:amount/this.rate;
+      var rec={
+        id: Date.now().toString(),
+        city:city, amount_syp:parseFloat(aSYP.toFixed(2)), amount_usd:parseFloat(aUSD.toFixed(2)),
+        description:$('incomeDescription').value||'',
+        date:$('incomeDate').value, exchange_rate:this.rate, created_at:new Date().toISOString()
+      };
+      try{
+        if(sbReady && SB){
+          var {error}=await SB.from('incomes').insert(rec);
+          if(error) throw error;
+          // onSnapshot will update this.data automatically
+        } else {
+          this.data.unshift(this.mapRow(rec)); this.saveLocal(); this.renderDashboard();
+        }
+        this.showMsg('✅ تم إضافة الإيراد بنجاح');
+        $('incomeForm').reset(); $('incomeDate').value=today();
+        this.playSound(880,.2);
+      }catch(err){ console.error(err); this.showMsg('❌ خطأ في الإضافة: '+err.message,'error'); }
+    },
+
+    // ── DELETE ────────────────────────────────────────────
+    deleteIncome: async function(id){
+      var item=this.data.find(function(d){return d.id===id;});
+      if(!item) return;
+      var trashRec={
+        id:item.id, city:item.city, amount_syp:item.amountSYP, amount_usd:item.amountUSD,
+        description:item.description, date:item.date, exchange_rate:item.exchangeRate,
+        created_at:item.createdAt, deleted_at:new Date().toISOString()
+      };
+      try{
+        if(sbReady && SB){
+          await SB.from('trash').insert(trashRec);
+          await SB.from('incomes').delete().eq('id',id);
+        } else {
+          this.trash.unshift(this.mapTrashRow(trashRec));
+          this.data=this.data.filter(function(d){return d.id!==id;});
+          this.saveLocal(); this.renderDashboard(); this.renderTrash();
+        }
+        this.showMsg('✅ تم النقل إلى سلة المحذوفات');
+        this.playSound(440,.15);
+      }catch(err){ console.error(err); this.showMsg('❌ خطأ في الحذف','error'); }
+    },
+
+    // ── EDIT ──────────────────────────────────────────────
+    editIncome: function(id){
+      var item=this.data.find(function(d){return d.id===id;});
+      if(!item) return;
+      this.editId=id;
+      App.showSection('addIncomeSection',null);
+      $('incomeCity').value=item.city;
+      $('incomeAmount').value=item.amountSYP;
+      $('incomeCurrency').value='SYP';
+      $('incomeDescription').value=item.description||'';
+      $('incomeDate').value=item.date;
+      this.calcEquiv();
+      var btn=$('incomeForm').querySelector('button[type="submit"]');
+      btn.textContent='✏️ تحديث الإيراد';
+      var self=this;
+      $('incomeForm').onsubmit=function(ev){
+        ev.preventDefault(); self.updateIncome();
+        btn.textContent='✅ إضافة الإيراد';
+        $('incomeForm').onsubmit=function(ev2){ev2.preventDefault();self.addIncome(ev2);};
+      };
+    },
+
+    updateIncome: async function(){
+      var id=this.editId; if(!id) return;
+      var city=$('incomeCity').value, cur=$('incomeCurrency').value;
+      var amount=parseFloat($('incomeAmount').value);
+      if(!city||!amount){ this.showMsg('⚠️ ملء الحقول الإجبارية','error'); return; }
+      var aSYP=cur==='SYP'?amount:amount*this.rate;
+      var aUSD=cur==='USD'?amount:amount/this.rate;
+      var upd={
+        city:city, amount_syp:parseFloat(aSYP.toFixed(2)), amount_usd:parseFloat(aUSD.toFixed(2)),
+        description:$('incomeDescription').value||'',
+        date:$('incomeDate').value, exchange_rate:this.rate
+      };
+      try{
+        if(sbReady && SB){
+          var {error}=await SB.from('incomes').update(upd).eq('id',id);
+          if(error) throw error;
+        } else {
+          var idx=this.data.findIndex(function(d){return d.id===id;});
+          if(idx>=0) Object.assign(this.data[idx],{city:upd.city,amountSYP:upd.amount_syp,amountUSD:upd.amount_usd,description:upd.description,date:upd.date,exchangeRate:upd.exchange_rate});
+          this.saveLocal(); this.renderDashboard();
+        }
+        this.showMsg('✅ تم التحديث'); this.editId=null;
+        $('incomeForm').reset(); $('incomeDate').value=today();
+        this.playSound(660,.2);
+      }catch(err){ console.error(err); this.showMsg('❌ خطأ في التحديث','error'); }
+    },
+
+    // ── RESTORE ───────────────────────────────────────────
+    restoreIncome: async function(id){
+      var item=this.trash.find(function(t){return t.id===id;});
+      if(!item) return;
+      var rec={
+        id:item.id, city:item.city, amount_syp:item.amountSYP, amount_usd:item.amountUSD,
+        description:item.description, date:item.date, exchange_rate:item.exchangeRate, created_at:item.createdAt
+      };
+      try{
+        if(sbReady && SB){
+          await SB.from('incomes').insert(rec);
+          await SB.from('trash').delete().eq('id',id);
+        } else {
+          this.data.unshift(this.mapRow(rec));
+          this.trash=this.trash.filter(function(t){return t.id!==id;});
+          this.saveLocal(); this.renderDashboard(); this.renderTrash();
+        }
+        this.showMsg('✅ تم استرجاع الإيراد');
+      }catch(err){ console.error(err); this.showMsg('❌ خطأ في الاسترجاع','error'); }
+    },
+
+    // ── CLEAR ALL ─────────────────────────────────────────
+    clearAllData: async function(){
+      if(!confirm('⚠️ حذف كل البيانات نهائياً؟')) return;
+      try{
+        if(sbReady && SB){
+          await SB.from('incomes').delete().neq('id','__none__');
+          await SB.from('trash').delete().neq('id','__none__');
+        }
+      }catch(e){ console.error(e); }
+      this.data=[]; this.trash=[]; this.saveLocal(); this.renderDashboard();
+      this.showMsg('✅ تم حذف كل البيانات');
+    },
+
+    // ── RENDER ────────────────────────────────────────────
+    renderDashboard: function(){ this.renderStats(); this.renderCharts(); this.renderHistory(); this.renderTrash(); },
+
+    getFiltered: function(){
+      var city=$('dashboardCityFilter').value, df=$('dashboardDateFrom').value, dt=$('dashboardDateTo').value;
+      var f=this.data.slice();
+      if(city) f=f.filter(function(d){return d.city===city;});
+      if(df)   f=f.filter(function(d){return d.date>=df;});
+      if(dt)   f=f.filter(function(d){return d.date<=dt;});
+      return f;
+    },
+
+    renderStats: function(){
+      var data=this.getFiltered();
+      var tSYP=data.reduce(function(s,d){return s+(d.amountSYP||0);},0);
+      var tUSD=data.reduce(function(s,d){return s+(d.amountUSD||0);},0);
+      var cs={};
+      CITIES.forEach(function(c){ var cd=data.filter(function(d){return d.city===c;}); cs[c]={syp:cd.reduce(function(s,d){return s+(d.amountSYP||0);},0),usd:cd.reduce(function(s,d){return s+(d.amountUSD||0);},0)}; });
+      $('statsRow').innerHTML=
+        '<div class="stat-card"><div class="label">🏦 الإجمالي (SYP)</div><div class="value">'+fmt(tSYP.toFixed(0))+'</div></div>'+
+        '<div class="stat-card"><div class="label">💵 الإجمالي (USD)</div><div class="value">'+fmt(tUSD.toFixed(2))+'</div></div>'+
+        CITIES.map(function(c){return '<div class="stat-card"><div class="label">'+c+'</div><div class="value">'+fmt(cs[c].syp.toFixed(0))+'</div><div style="font-size:11px;opacity:.7">$'+fmt(cs[c].usd.toFixed(1))+'</div></div>';}).join('');
+      $('dashboardStats').innerHTML=
+        '<div style="margin:15px 0"><p style="opacity:.85;margin-bottom:8px">💷 الليرة السورية</p><h3 style="font-size:28px;margin-bottom:15px">'+fmt(tSYP.toFixed(2))+' SYP</h3></div>'+
+        '<div style="margin:15px 0"><p style="opacity:.85;margin-bottom:8px">💵 الدولار الأمريكي</p><h3 style="font-size:28px">'+fmt(tUSD.toFixed(2))+' USD</h3></div>';
+    },
+
+    renderCharts: function(){
+      var data=this.getFiltered(), cd={};
+      CITIES.forEach(function(c){cd[c]=data.filter(function(d){return d.city===c;}).reduce(function(s,d){return s+(d.amountSYP||0);},0);});
+      var cc=$('citiesChart'); if(this.charts.cities) this.charts.cities.destroy();
+      this.charts.cities=new Chart(cc,{type:'doughnut',data:{labels:CITIES,datasets:[{data:Object.values(cd),backgroundColor:['rgba(102,126,234,.85)','rgba(240,147,251,.85)','rgba(79,172,254,.85)','rgba(0,242,254,.85)','rgba(240,128,128,.85)','rgba(144,202,249,.85)']}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'white',font:{family:'Cairo'}}}}}});
+      var dd={};
+      data.forEach(function(d){if(!dd[d.date])dd[d.date]={syp:0,usd:0};dd[d.date].syp+=d.amountSYP||0;dd[d.date].usd+=d.amountUSD||0;});
+      var sd=Object.keys(dd).sort(), dc=$('dailyChart');
+      if(this.charts.daily) this.charts.daily.destroy();
+      this.charts.daily=new Chart(dc,{type:'line',data:{labels:sd,datasets:[{label:'SYP',data:sd.map(function(d){return dd[d].syp;}),borderColor:'rgba(102,126,234,.85)',backgroundColor:'rgba(102,126,234,.12)',tension:.4,fill:true},{label:'USD',data:sd.map(function(d){return dd[d].usd;}),borderColor:'rgba(72,187,120,.85)',backgroundColor:'rgba(72,187,120,.12)',tension:.4,fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'white',font:{family:'Cairo'}}}},scales:{y:{ticks:{color:'rgba(255,255,255,.75)'}},x:{ticks:{color:'rgba(255,255,255,.75)'}}}}});
+    },
+
+    renderHistory: function(){
+      var f=$('cityFilter').value, list=this.data.slice();
+      if(f) list=list.filter(function(d){return d.city===f;});
+      list.sort(function(a,b){return new Date(b.date)-new Date(a.date);});
+      $('historyTable').innerHTML=list.map(function(item){
+        var id=item.id;
+        return '<tr><td>'+item.city+'</td><td>'+fmt(item.amountSYP.toFixed(2))+'</td><td>'+fmt(item.amountUSD.toFixed(2))+'</td><td>'+fmt(item.exchangeRate.toFixed(0))+'</td><td>'+item.date+'</td><td>'+(item.description||'-')+'</td>'+
+          '<td><div class="btn-group">'+
+          '<button class="btn btn-secondary btn-small" onclick="App.editIncome(\''+id+'\')">✏️ تعديل</button>'+
+          '<button class="btn btn-danger btn-small" onclick="App.deleteIncome(\''+id+'\')">🗑️ حذف</button>'+
+          '</div></td></tr>';
+      }).join('');
+    },
+
+    generateReport: function(){
+      var df=$('reportDateFrom').value, dt=$('reportDateTo').value, city=$('reportCityFilter').value;
+      if(!df||!dt){ this.showMsg('⚠️ اختر نطاق التاريخ','error'); return; }
+      var list=this.data.filter(function(d){return d.date>=df&&d.date<=dt;});
+      if(city) list=list.filter(function(d){return d.city===city;});
+      var tSYP=list.reduce(function(s,d){return s+(d.amountSYP||0);},0);
+      var tUSD=list.reduce(function(s,d){return s+(d.amountUSD||0);},0);
+      var cb={}; CITIES.forEach(function(c){var cd=list.filter(function(d){return d.city===c;});cb[c]={syp:cd.reduce(function(s,d){return s+(d.amountSYP||0);},0),usd:cd.reduce(function(s,d){return s+(d.amountUSD||0);},0),count:cd.length};});
+      $('reportContent').innerHTML=
+        '<div class="summary-box"><h4 style="margin-bottom:12px">📈 ملخص من '+df+' إلى '+dt+'</h4>'+
+        '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:15px">'+
+        '<div style="background:rgba(102,126,234,.2);padding:15px;border-radius:8px;text-align:center"><p style="font-size:12px;opacity:.8;margin-bottom:4px">الإجمالي (SYP)</p><h2>'+fmt(tSYP.toFixed(2))+'</h2></div>'+
+        '<div style="background:rgba(72,187,120,.2);padding:15px;border-radius:8px;text-align:center"><p style="font-size:12px;opacity:.8;margin-bottom:4px">الإجمالي (USD)</p><h2>$'+fmt(tUSD.toFixed(2))+'</h2></div>'+
+        '<div style="background:rgba(240,147,251,.2);padding:15px;border-radius:8px;text-align:center"><p style="font-size:12px;opacity:.8;margin-bottom:4px">عدد العمليات</p><h2>'+list.length+'</h2></div>'+
+        '</div></div>'+
+        '<div class="card" style="margin-top:15px"><h3>🏙️ توزيع حسب المدينة</h3><table class="data-table"><thead><tr><th>المدينة</th><th>العدد</th><th>SYP</th><th>USD</th><th>النسبة</th></tr></thead><tbody>'+
+        CITIES.map(function(c){var p=tSYP>0?((cb[c].syp/tSYP)*100).toFixed(1):0;return '<tr><td>'+c+'</td><td>'+cb[c].count+'</td><td>'+fmt(cb[c].syp.toFixed(2))+'</td><td>'+fmt(cb[c].usd.toFixed(2))+'</td><td style="color:#a8e6a1;font-weight:600">'+p+'%</td></tr>';}).join('')+'</tbody></table></div>'+
+        '<div class="card" style="margin-top:15px"><h3>📋 تفاصيل المعاملات</h3><table class="data-table"><thead><tr><th>التاريخ</th><th>المدينة</th><th>SYP</th><th>USD</th><th>الوصف</th></tr></thead><tbody>'+
+        (list.length?list.map(function(d){return '<tr><td>'+d.date+'</td><td>'+d.city+'</td><td>'+fmt(d.amountSYP.toFixed(2))+'</td><td>'+fmt(d.amountUSD.toFixed(2))+'</td><td>'+(d.description||'-')+'</td></tr>';}).join(''):'<tr><td colspan="5" style="text-align:center">لا توجد بيانات</td></tr>')+
+        '</tbody></table></div>';
+    },
+
+    renderTrash: function(){
+      var tl=$('trashList');
+      if(!this.trash.length){ tl.innerHTML='<p style="text-align:center;opacity:.7">لا توجد عناصر محذوفة</p>'; return; }
+      tl.innerHTML='<div class="trash-container">'+this.trash.map(function(item){
+        return '<div class="trash-item"><div><strong>'+item.city+'</strong> — '+fmt((item.amountSYP||0).toFixed(2))+' SYP<br>'+
+          '<small style="opacity:.65">حذف في: '+new Date(item.deletedAt).toLocaleString('ar-SA')+'</small></div>'+
+          '<button class="btn btn-success btn-small" onclick="App.restoreIncome(\''+item.id+'\')">استرجاع ↩️</button></div>';
+      }).join('')+'</div>';
+    },
+
+    saveSettings: function(){
+      var dm=$('darkMode').checked;
+      localStorage.setItem('darkMode',dm.toString());
+      if(dm) document.body.classList.add('dark-mode'); else document.body.classList.remove('dark-mode');
+      this.showMsg('✅ تم حفظ الإعدادات');
+    },
+
+    // ── PDF EXPORT ────────────────────────────────────────
+    buildExport: function(df,dt,city){
+      var d=this.data.slice();
+      if(df&&dt) d=d.filter(function(x){return x.date>=df&&x.date<=dt;});
+      if(city) d=d.filter(function(x){return x.city===city;});
+      return d;
+    },
+    exportPDF: function(){ var df=$('reportDateFrom').value,dt=$('reportDateTo').value,c=$('reportCityFilter').value; this.doPDF(df,dt,c); },
+    exportPDFWithFilters: function(){
+      var df=$('reportDateFrom').value,dt=$('reportDateTo').value,c=$('reportCityFilter').value;
+      if(!df||!dt){ this.showMsg('⚠️ اختر نطاق التاريخ','error'); return; }
+      this.doPDF(df,dt,c);
+    },
+    doPDF: function(dateFrom,dateTo,city){
+      var self=this, dayData=this.buildExport(dateFrom,dateTo,city);
+      if(!dayData.length){ this.showMsg('⚠️ لا توجد بيانات','error'); return; }
+      var tSYP=dayData.reduce(function(s,d){return s+(d.amountSYP||0);},0);
+      var tUSD=dayData.reduce(function(s,d){return s+(d.amountUSD||0);},0);
+      var cb={}; CITIES.forEach(function(c){var cd=dayData.filter(function(d){return d.city===c;});cb[c]={syp:cd.reduce(function(s,d){return s+(d.amountSYP||0);},0),usd:cd.reduce(function(s,d){return s+(d.amountUSD||0);},0),count:cd.length};});
+      var rangeLabel=(dateFrom&&dateTo)?('من '+dateFrom+' إلى '+dateTo):'جميع البيانات';
+      var CHART_COLORS=['#6366f1','#ec4899','#06b6d4','#10b981','#f59e0b','#ef4444'];
+      show($('pdfOverlay')); $('pdfOverlayMsg').textContent='⏳ جاري رسم المخططات...';
+      var cD=document.createElement('canvas'); cD.width=340; cD.height=280; cD.style.cssText='position:fixed;left:-9999px'; document.body.appendChild(cD);
+      var cB=document.createElement('canvas'); cB.width=400; cB.height=280; cB.style.cssText='position:fixed;left:-9999px'; document.body.appendChild(cB);
+      var ac=CITIES.filter(function(c){return cb[c].syp>0;}), acol=ac.map(function(c){return CHART_COLORS[CITIES.indexOf(c)];}), asyp=ac.map(function(c){return cb[c].syp;}), apct=ac.map(function(c){return tSYP>0?parseFloat(((cb[c].syp/tSYP)*100).toFixed(1)):0;});
+      var ch1=new Chart(cD,{type:'doughnut',data:{labels:ac,datasets:[{data:apct,backgroundColor:acol,borderWidth:2,borderColor:'#fff'}]},options:{responsive:false,animation:false,plugins:{legend:{position:'bottom',labels:{font:{size:11},padding:8,boxWidth:12}},tooltip:{callbacks:{label:function(ctx){return ctx.label+': '+ctx.parsed+'%';}}}},cutout:'55%'}});
+      var ch2=new Chart(cB,{type:'bar',data:{labels:ac,datasets:[{label:'SYP',data:asyp,backgroundColor:acol,borderRadius:5,borderWidth:0}]},options:{responsive:false,animation:false,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:9},callback:function(v){return v>=1e6?(v/1e6).toFixed(1)+'M':v>=1000?(v/1000).toFixed(0)+'K':v;}},grid:{color:'#eee'}},y:{ticks:{font:{size:11}},grid:{display:false}}}}});
+      setTimeout(function(){
+        var img1=cD.toDataURL('image/png'), img2=cB.toDataURL('image/png');
+        ch1.destroy(); ch2.destroy(); document.body.removeChild(cD); document.body.removeChild(cB);
+        var cityRows=CITIES.map(function(c){var p=tSYP>0?((cb[c].syp/tSYP)*100).toFixed(1):'0';return '<tr><td style="border:1px solid #ddd;padding:7px">'+c+'</td><td style="border:1px solid #ddd;padding:7px;text-align:center">'+cb[c].count+'</td><td style="border:1px solid #ddd;padding:7px">'+fmt(cb[c].syp.toFixed(0))+'</td><td style="border:1px solid #ddd;padding:7px">'+fmt(cb[c].usd.toFixed(2))+'</td><td style="border:1px solid #ddd;padding:7px;text-align:center;color:#2e7d32;font-weight:bold">'+p+'%</td></tr>';}).join('');
+        var detailRows=dayData.map(function(d){return '<tr><td style="border:1px solid #ddd;padding:6px;font-size:11px">'+d.date+'</td><td style="border:1px solid #ddd;padding:6px;font-size:11px">'+d.city+'</td><td style="border:1px solid #ddd;padding:6px;font-size:11px">'+fmt(d.amountSYP.toFixed(0))+'</td><td style="border:1px solid #ddd;padding:6px;font-size:11px">'+fmt(d.amountUSD.toFixed(2))+'</td><td style="border:1px solid #ddd;padding:6px;font-size:11px">'+fmt(d.exchangeRate.toFixed(0))+'</td><td style="border:1px solid #ddd;padding:6px;font-size:11px">'+(d.description||'-')+'</td></tr>';}).join('');
+        var ra=$('pdfRenderArea');
+        ra.innerHTML='<div style="padding:16px 20px;font-family:Arial,sans-serif;direction:rtl;background:#fff;color:#111;font-size:13px">'+
+          '<h1 style="text-align:center;color:#333;margin:0 0 4px;font-size:20px">📊 تقرير الإيراد الشامل</h1>'+
+          '<h2 style="text-align:center;color:#666;font-size:13px;margin:0 0 12px;font-weight:normal">'+rangeLabel+(city?' — '+city:'')+'</h2>'+
+          '<div style="background:#4a5568;padding:14px;border-radius:8px;color:white;margin-bottom:14px"><div style="display:flex;gap:10px">'+
+          '<div style="background:rgba(255,255,255,.2);padding:10px;border-radius:6px;flex:1;text-align:center"><div style="font-size:10px;opacity:.85;margin-bottom:3px">إجمالي (SYP)</div><div style="font-size:17px;font-weight:bold">'+fmt(tSYP.toFixed(0))+'</div></div>'+
+          '<div style="background:rgba(255,255,255,.2);padding:10px;border-radius:6px;flex:1;text-align:center"><div style="font-size:10px;opacity:.85;margin-bottom:3px">إجمالي (USD)</div><div style="font-size:17px;font-weight:bold">$'+fmt(tUSD.toFixed(2))+'</div></div>'+
+          '<div style="background:rgba(255,255,255,.2);padding:10px;border-radius:6px;flex:1;text-align:center"><div style="font-size:10px;opacity:.85;margin-bottom:3px">عدد العمليات</div><div style="font-size:17px;font-weight:bold">'+dayData.length+'</div></div>'+
+          '</div></div>'+
+          '<h3 style="color:#4a5568;border-bottom:2px solid #667eea;padding-bottom:5px;margin:0 0 8px;font-size:13px">📍 توزيع حسب المدينة</h3>'+
+          '<table style="width:100%;border-collapse:collapse;margin-bottom:14px;font-size:12px"><thead><tr>'+
+          '<th style="background:#667eea;color:white;padding:8px;text-align:right;border:1px solid #667eea">المدينة</th>'+
+          '<th style="background:#667eea;color:white;padding:8px;text-align:center;border:1px solid #667eea">العدد</th>'+
+          '<th style="background:#667eea;color:white;padding:8px;text-align:right;border:1px solid #667eea">SYP</th>'+
+          '<th style="background:#667eea;color:white;padding:8px;text-align:right;border:1px solid #667eea">USD</th>'+
+          '<th style="background:#667eea;color:white;padding:8px;text-align:center;border:1px solid #667eea">النسبة</th>'+
+          '</tr></thead><tbody>'+cityRows+'</tbody></table>'+
+          '<div style="display:flex;gap:16px;align-items:center;margin-bottom:14px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:10px">'+
+          '<div style="flex:0 0 auto;text-align:center"><div style="font-size:10px;color:#555;margin-bottom:4px;font-weight:bold">النسبة %</div><img src="'+img1+'" style="width:180px;height:148px;display:block" /></div>'+
+          '<div style="flex:1;text-align:center"><div style="font-size:10px;color:#555;margin-bottom:4px;font-weight:bold">حجم الإيراد SYP</div><img src="'+img2+'" style="width:100%;max-width:320px;height:148px;display:block;margin:0 auto" /></div>'+
+          '</div>'+
+          '<h3 style="color:#4a5568;border-bottom:2px solid #667eea;padding-bottom:5px;margin:0 0 8px;font-size:13px">📋 تفاصيل المعاملات</h3>'+
+          '<table style="width:100%;border-collapse:collapse;font-size:11px"><thead><tr>'+
+          '<th style="background:#667eea;color:white;padding:7px;text-align:right;border:1px solid #667eea">التاريخ</th>'+
+          '<th style="background:#667eea;color:white;padding:7px;text-align:right;border:1px solid #667eea">المدينة</th>'+
+          '<th style="background:#667eea;color:white;padding:7px;text-align:right;border:1px solid #667eea">SYP</th>'+
+          '<th style="background:#667eea;color:white;padding:7px;text-align:right;border:1px solid #667eea">USD</th>'+
+          '<th style="background:#667eea;color:white;padding:7px;text-align:right;border:1px solid #667eea">سعر الصرف</th>'+
+          '<th style="background:#667eea;color:white;padding:7px;text-align:right;border:1px solid #667eea">الوصف</th>'+
+          '</tr></thead><tbody>'+detailRows+'</tbody></table>'+
+          '<p style="text-align:center;color:#aaa;font-size:10px;margin-top:18px">تم التوليد من متتبع الإيراد 🇸🇾 | '+new Date().toLocaleString('ar-SA')+'</p></div>';
+        $('pdfOverlayMsg').textContent='⏳ جاري إنشاء الملف...';
+        var fn='تقرير'; if(dateFrom&&dateTo) fn+='_'+dateFrom+'_إلى_'+dateTo; if(city) fn+='_'+city; fn+='.pdf';
+        html2pdf().set({margin:[8,8,8,8],filename:fn,image:{type:'jpeg',quality:.98},html2canvas:{scale:2,useCORS:true,logging:false,backgroundColor:'#ffffff',windowWidth:794},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}}).from(ra).save()
+          .then(function(){ra.innerHTML='';hide($('pdfOverlay'));self.showMsg('✅ تم تحميل PDF ✨');self.playSound(784,.3);})
+          .catch(function(e){ra.innerHTML='';hide($('pdfOverlay'));self.showMsg('❌ خطأ في PDF','error');console.error(e);});
+      },200);
+    },
+
+    exportExcelWithFilters: function(){ this.exportExcel(); },
+    exportExcel: function(){
+      var df=$('reportDateFrom').value,dt=$('reportDateTo').value,c=$('reportCityFilter').value;
+      var list=this.buildExport(df,dt,c);
+      if(!list.length){ this.showMsg('⚠️ لا توجد بيانات','error'); return; }
+      var csv='التاريخ,المدينة,المبلغ SYP,المبلغ USD,سعر الصرف,الوصف\n';
+      list.forEach(function(d){csv+=d.date+','+d.city+','+d.amountSYP.toFixed(2)+','+d.amountUSD.toFixed(2)+','+d.exchangeRate.toFixed(0)+',"'+(d.description||'')+'"\n';});
+      var blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'}), link=document.createElement('a');
+      link.href=URL.createObjectURL(blob);
+      var fn='تقرير'; if(df&&dt) fn+='_'+df+'_إلى_'+dt; if(c) fn+='_'+c; fn+='.csv';
+      link.download=fn; document.body.appendChild(link); link.click(); document.body.removeChild(link);
+      this.showMsg('✅ تم تصدير Excel');
+    },
+
+    // ── SOUND ─────────────────────────────────────────────
+    playSound: function(freq,vol){
+      try{
+        var ac=new(window.AudioContext||window.webkitAudioContext)(), osc=ac.createOscillator(), g=ac.createGain();
+        osc.connect(g); g.connect(ac.destination);
+        var now=ac.currentTime;
+        osc.frequency.setValueAtTime(freq,now); g.gain.setValueAtTime(vol,now); g.gain.exponentialRampToValueAtTime(.01,now+.2);
+        osc.start(now); osc.stop(now+.2);
+      }catch(e){}
+    },
+
+    // ── NAV ───────────────────────────────────────────────
+    showSection: function(id,evt){
+      document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active');});
+      $(id).classList.add('active');
+      document.querySelectorAll('.sidebar button').forEach(function(b){b.classList.remove('active');});
+      if(evt&&evt.target) evt.target.classList.add('active');
+      if(id==='historySection') this.renderHistory();
+      if(id==='trashSection')   this.renderTrash();
+    }
+  };
+
+  window.addEventListener('DOMContentLoaded',function(){ App.init(); });
+  </script>
+
+</body>
+</html>
